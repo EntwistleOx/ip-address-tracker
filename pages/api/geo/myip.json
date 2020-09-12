@@ -1,0 +1,26 @@
+{
+  "ip": "201.189.202.187",
+  "location": {
+    "country": "CL",
+    "region": "Santiago Metropolitan",
+    "city": "Santiago",
+    "lat": -33.4513,
+    "lng": -70.6653,
+    "postalCode": "8320000",
+    "timezone": "-03:00",
+    "geonameId": 3871336
+  },
+  "as": {
+    "asn": 7418,
+    "name": "Movistar ISP",
+    "route": "201.188.0.0/15",
+    "domain": "http://www.movistar.cl",
+    "type": "Cable/DSL/ISP"
+  },
+  "isp": "Telefonica Movil De Chile S.A",
+  "proxy": {
+    "proxy": false,
+    "vpn": false,
+    "tor": false
+  }
+}
