@@ -15,7 +15,9 @@ const Home = ({ data }) => {
   const [ipError, setIpError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect(async () => {
+    const res = await fetch(`api/geo`);
+    const data = await res.json();
     setGeo(data);
     setLoading(false);
   }, []);
@@ -33,9 +35,7 @@ const Home = ({ data }) => {
         ip,
       )
     ) {
-      const res = await fetch(
-        `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/geo/${ip}`,
-      );
+      const res = await fetch(`api/geo/${ip}`);
       const data = await res.json();
       setGeo(data);
       setLoading(false);
@@ -73,41 +73,40 @@ const Home = ({ data }) => {
               {ipError && <small className='error'>Invalid IP Address!</small>}
             </div>
           </form>
-          {!geo ? (
-            '...'
-          ) : (
-            <div className='card'>
-              <div className='info'>
-                <h2 className='title'>IP ADDRESS</h2>
-                <p className='data'>{loading ? <Skeleton /> : geo.ip}</p>
-              </div>
-              <div className='info'>
-                <h2 className='title'>LOCATION</h2>
-                <p className='data'>
-                  {loading ? (
-                    <Skeleton />
-                  ) : (
-                    `${geo.location.city}, ${geo.location.region} ${geo.location.postalCode}`
-                  )}
-                </p>
-              </div>
-              <div className='info visible'>
-                <h2 className='title'>TIMEZONE</h2>
-                <p className='data'>
-                  {loading ? <Skeleton /> : geo.location.timezone}
-                </p>
-              </div>
-              <div className='info visible'>
-                <h2 className='title'>ISP</h2>
-                <p className='data'>{loading ? <Skeleton /> : geo.isp}</p>
-              </div>
+
+          <div className='card'>
+            <div className='info'>
+              <h2 className='title'>IP ADDRESS</h2>
+              <p className='data'>
+                {loading ? <Skeleton width={'90%'} /> : geo.ip}
+              </p>
             </div>
-          )}
+            <div className='info'>
+              <h2 className='title'>LOCATION</h2>
+              <p className='data'>
+                {loading ? (
+                  <Skeleton width={'90%'} />
+                ) : (
+                  `${geo.location.city}, ${geo.location.region} ${geo.location.postalCode}`
+                )}
+              </p>
+            </div>
+            <div className='info visible'>
+              <h2 className='title'>TIMEZONE</h2>
+              <p className='data'>
+                {loading ? <Skeleton width={'90%'} /> : geo.location.timezone}
+              </p>
+            </div>
+            <div className='info visible'>
+              <h2 className='title'>ISP</h2>
+              <p className='data'>
+                {loading ? <Skeleton width={'90%'} /> : geo.isp}
+              </p>
+            </div>
+          </div>
         </div>
       </header>
-      {!geo ? (
-        `...`
-      ) : loading ? (
+      {loading ? (
         <MapLoading />
       ) : (
         <DynamicComponentWithNoSSR
@@ -118,14 +117,5 @@ const Home = ({ data }) => {
     </>
   );
 };
-
-// This gets called on every request
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await fetch(` http://localhost:${process.env.PORT}/api/geo`);
-  const data = await res.json();
-
-  return { props: { data } };
-}
 
 export default Home;
