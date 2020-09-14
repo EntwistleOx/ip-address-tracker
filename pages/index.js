@@ -15,19 +15,19 @@ const Home = ({ data }) => {
   const [ipError, setIpError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    const res = await fetch(`api/geo`);
-    const data = await res.json();
-    setGeo(data);
-    setLoading(false);
-  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      setGeo(data);
+      setLoading(false);
+    }
+    fetchData();
+  }, [data]);
 
   const handleChange = () => {
     setIpError(false);
   };
 
   const onSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
     const ip = e.target.ip.value;
     if (
@@ -35,6 +35,7 @@ const Home = ({ data }) => {
         ip,
       )
     ) {
+      setLoading(true);
       const res = await fetch(`api/geo/${ip}`);
       const data = await res.json();
       setGeo(data);
@@ -78,7 +79,7 @@ const Home = ({ data }) => {
             <div className='info'>
               <h2 className='title'>IP ADDRESS</h2>
               <p className='data'>
-                {loading ? <Skeleton width={'90%'} /> : geo.ip}
+                {loading ? <Skeleton width={'90%'} /> : geo.query}
               </p>
             </div>
             <div className='info'>
@@ -87,14 +88,14 @@ const Home = ({ data }) => {
                 {loading ? (
                   <Skeleton width={'90%'} />
                 ) : (
-                  `${geo.location.city}, ${geo.location.region} ${geo.location.postalCode}`
+                  `${geo.city}, ${geo.regionName} ${geo.zip}`
                 )}
               </p>
             </div>
             <div className='info visible'>
               <h2 className='title'>TIMEZONE</h2>
               <p className='data'>
-                {loading ? <Skeleton width={'90%'} /> : geo.location.timezone}
+                {loading ? <Skeleton width={'90%'} /> : geo.timezone}
               </p>
             </div>
             <div className='info visible'>
@@ -109,13 +110,21 @@ const Home = ({ data }) => {
       {loading ? (
         <MapLoading />
       ) : (
-        <DynamicComponentWithNoSSR
-          position={[geo.location.lat, geo.location.lng]}
-          zoom={28}
-        />
+        <DynamicComponentWithNoSSR position={[geo.lat, geo.lon]} zoom={28} />
       )}
     </>
   );
 };
+
+export async function getStaticProps() {
+  const res = await fetch(`http://ip-api.com/json/`);
+  const data = await res.json();
+
+  return {
+    props: {
+      data,
+    },
+  };
+}
 
 export default Home;
