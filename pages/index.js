@@ -16,14 +16,16 @@ const Home = ({ data }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
+    console.log(data);
     async function fetchData() {
-      const res = await fetch(`https://ip-api.com/json/`);
-      const data = await res.json();
+      const res = await fetch(`https://www.cloudflare.com/cdn-cgi/trace`);
+      const data2 = await res.json();
+      console.log(data2);
       setGeo(data);
       setLoading(false);
     }
     fetchData();
-  }, [data]);
+  }, []);
 
   const handleChange = () => {
     setIpError(false);
