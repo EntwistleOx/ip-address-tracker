@@ -17,7 +17,7 @@ const Home = ({ data }) => {
 
   useEffect(async () => {
     async function fetchData() {
-      const res = await fetch(`http://ip-api.com/json/`);
+      const res = await fetch(`https://ip-api.com/json/`);
       const data = await res.json();
       setGeo(data);
       setLoading(false);
@@ -50,6 +50,11 @@ const Home = ({ data }) => {
   return (
     <>
       <Head>
+        <meta
+          http-equiv='Content-Security-Policy'
+          content='upgrade-insecure-requests'
+        />
+
         <title>IP Address Tracker</title>
         <link
           rel='icon'
