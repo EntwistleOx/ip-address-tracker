@@ -15,14 +15,14 @@ const Home = ({ data }) => {
   const [ipError, setIpError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
+  useEffect(() => {
     console.log(data);
+    setGeo(data);
+    setLoading(false);
     async function fetchData() {
       const res = await fetch(`https://json.geoiplookup.io/`);
       const data2 = await res.json();
       console.log(data2);
-      setGeo(data);
-      setLoading(false);
     }
     fetchData();
   }, []);
@@ -52,11 +52,6 @@ const Home = ({ data }) => {
   return (
     <>
       <Head>
-        <meta
-          http-equiv='Content-Security-Policy'
-          content='upgrade-insecure-requests'
-        />
-
         <title>IP Address Tracker</title>
         <link
           rel='icon'
