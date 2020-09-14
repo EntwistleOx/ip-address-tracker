@@ -15,8 +15,10 @@ const Home = ({ data }) => {
   const [ipError, setIpError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect(async () => {
     async function fetchData() {
+      const res = await fetch(`http://ip-api.com/json/`);
+      const data = await res.json();
       setGeo(data);
       setLoading(false);
     }
