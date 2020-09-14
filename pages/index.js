@@ -18,7 +18,7 @@ const Home = ({ data }) => {
   useEffect(async () => {
     console.log(data);
     async function fetchData() {
-      const res = await fetch(`https://www.cloudflare.com/cdn-cgi/trace`);
+      const res = await fetch(`https://json.geoiplookup.io/`);
       const data2 = await res.json();
       console.log(data2);
       setGeo(data);
