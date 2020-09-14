@@ -1,72 +1,128 @@
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import Arrow from '../components/Icons/Arrow';
+import MapLoading from '../components/MapLoading';
 
 const DynamicComponentWithNoSSR = dynamic(() => import('../components/Map'), {
   ssr: false,
-  loading: () => <p>...</p>,
+  loading: () => <MapLoading />,
 });
 
 const Home = ({ data }) => {
   const [geo, setGeo] = useState(false);
+  const [ipError, setIpError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setGeo(data);
+    setLoading(false);
   }, []);
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    const ip = e.target.ip.value;
-    const res = await fetch(`http://localhost:3000/api/geo/${ip}`);
-    const data = await res.json();
-    console.log(data);
-    setGeo(data);
+  const handleChange = () => {
+    setIpError(false);
   };
 
-  console.log(geo);
+  const onSubmit = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    const ip = e.target.ip.value;
+    if (
+      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+        ip,
+      )
+    ) {
+      const res = await fetch(
+        `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/geo/${ip}`,
+      );
+      const data = await res.json();
+      setGeo(data);
+      setLoading(false);
+    } else {
+      setIpError(true);
+    }
+  };
 
   return (
-    <div>
+    <>
       <Head>
         <title>IP Address Tracker</title>
-        <link rel='icon' href='/favicon.ico' />
+        <link
+          rel='icon'
+          type='image/png'
+          sizes='32x32'
+          href='/favicon-32x32.png'
+        />
       </Head>
-      <main>
-        <h1>IP Address Tracker</h1>
-        <form onSubmit={onSubmit}>
-          <input
-            type='text'
-            name='ip'
-            placeholder='Search for any IP address or domain'
-          />
-          <button type='submit'>{'>'}</button>
-        </form>
-        {!geo ? (
-          'Loading...'
-        ) : (
-          <Fragment>
-            <div>IP ADDRESS: {geo.ip}</div>
-            <div>
-              LOCATION: {geo.location.city}, {geo.location.region} <br />
-              {geo.location.postalCode}
+      <header className='pattern'>
+        <div className='tracker'>
+          <h1>IP Address Tracker</h1>
+          <form className='search' onSubmit={onSubmit}>
+            <div className='formContainer'>
+              <input
+                type='text'
+                name='ip'
+                placeholder='Search for any IP address or domain'
+                required
+                onChange={handleChange}
+              />
+              <button type='submit'>
+                <Arrow />
+              </button>
+              {ipError && <small className='error'>Invalid IP Address!</small>}
             </div>
-            <div>TIMEZONE: {geo.location.timezone}</div>
-            <div>ISP: {geo.isp}</div>
-            <DynamicComponentWithNoSSR
-              position={[geo.location.lat, geo.location.lng]}
-              zoom={28}
-            />
-          </Fragment>
-        )}
-      </main>
-    </div>
+          </form>
+          {!geo ? (
+            '...'
+          ) : (
+            <div className='card'>
+              <div className='info'>
+                <h2 className='title'>IP ADDRESS</h2>
+                <p className='data'>{loading ? <Skeleton /> : geo.ip}</p>
+              </div>
+              <div className='info'>
+                <h2 className='title'>LOCATION</h2>
+                <p className='data'>
+                  {loading ? (
+                    <Skeleton />
+                  ) : (
+                    `${geo.location.city}, ${geo.location.region} ${geo.location.postalCode}`
+                  )}
+                </p>
+              </div>
+              <div className='info visible'>
+                <h2 className='title'>TIMEZONE</h2>
+                <p className='data'>
+                  {loading ? <Skeleton /> : geo.location.timezone}
+                </p>
+              </div>
+              <div className='info visible'>
+                <h2 className='title'>ISP</h2>
+                <p className='data'>{loading ? <Skeleton /> : geo.isp}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+      {!geo ? (
+        `...`
+      ) : loading ? (
+        <MapLoading />
+      ) : (
+        <DynamicComponentWithNoSSR
+          position={[geo.location.lat, geo.location.lng]}
+          zoom={28}
+        />
+      )}
+    </>
   );
 };
 
 // This gets called on every request
 export async function getServerSideProps() {
   // Fetch data from external API
-  const res = await fetch(` http://localhost:3000/api/geo`);
+  const res = await fetch(` http://localhost:${process.env.PORT}/api/geo`);
   const data = await res.json();
 
   return { props: { data } };
