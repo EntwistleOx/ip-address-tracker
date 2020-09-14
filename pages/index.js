@@ -10,19 +10,17 @@ const DynamicComponentWithNoSSR = dynamic(() => import('../components/Map'), {
   loading: () => <MapLoading />,
 });
 
-const Home = ({ data }) => {
+const Home = () => {
   const [geo, setGeo] = useState(false);
   const [ipError, setIpError] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(data);
-    setGeo(data);
-    setLoading(false);
     async function fetchData() {
-      const res = await fetch(`https://json.geoiplookup.io/`);
-      const data2 = await res.json();
-      console.log(data2);
+      const res = await fetch(`http://ip-api.com/json/`);
+      const data = await res.json();
+      setGeo(data);
+      setLoading(false);
     }
     fetchData();
   }, []);
@@ -119,16 +117,5 @@ const Home = ({ data }) => {
     </>
   );
 };
-
-export async function getStaticProps() {
-  const res = await fetch(`http://ip-api.com/json/`);
-  const data = await res.json();
-
-  return {
-    props: {
-      data,
-    },
-  };
-}
 
 export default Home;
