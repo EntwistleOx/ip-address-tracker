@@ -11,14 +11,17 @@ const DynamicComponentWithNoSSR = dynamic(() => import('../components/Map'), {
 });
 
 const Home = ({ data }) => {
-  const [geo, setGeo] = useState(false);
+  const [geo, setGeo] = useState({});
   const [ipError, setIpError] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`https://ipapi.co/json/`);
-      const data = await res.json();
+      const result = await fetch(`https://ipgeolocation.com/?json=1`);
+      const { ip } = await result.json();
+      const geoData = await fetch(`api/geo/${ip}`);
+      const data = await geoData.json();
+      console.log(data);
       setGeo(data);
       setLoading(false);
     }
@@ -40,7 +43,6 @@ const Home = ({ data }) => {
       setLoading(true);
       const res = await fetch(`api/geo/${ip}`);
       const data = await res.json();
-      console.log(data);
       setGeo(data);
       setLoading(false);
     } else {
@@ -91,7 +93,7 @@ const Home = ({ data }) => {
                 {loading ? (
                   <Skeleton width={'90%'} />
                 ) : (
-                  `${geo.city}, ${geo.region_code}, ${geo.country_name}`
+                  `${geo.location.city}, ${geo.location.region}, ${geo.location.postalCode}`
                 )}
               </p>
             </div>
@@ -101,14 +103,14 @@ const Home = ({ data }) => {
                 {loading ? (
                   <Skeleton width={'90%'} />
                 ) : (
-                  `${geo.timezone} ${geo.utc_offset}`
+                  `${geo.location.timezone}`
                 )}
               </p>
             </div>
             <div className='info visible'>
               <h2 className='title'>ISP</h2>
               <p className='data'>
-                {loading ? <Skeleton width={'90%'} /> : geo.org}
+                {loading ? <Skeleton width={'90%'} /> : geo.isp}
               </p>
             </div>
           </div>
@@ -118,7 +120,7 @@ const Home = ({ data }) => {
         <MapLoading />
       ) : (
         <DynamicComponentWithNoSSR
-          position={[geo.latitude, geo.longitude]}
+          position={[geo.location.lat, geo.location.lng]}
           zoom={28}
         />
       )}
