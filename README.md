@@ -1,4 +1,4 @@
-# Next.js IP Address Tracker📌
+# IP Address Tracker📌
 
 🌐 [Live Preview](https://entwistleox-ip-address-tracker.vercel.app/)
 
