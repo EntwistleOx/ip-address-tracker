@@ -10,7 +10,7 @@ const DynamicComponentWithNoSSR = dynamic(() => import('../components/Map'), {
   loading: () => <MapLoading />,
 });
 
-const Home = ({ data }) => {
+const Home = () => {
   const [geo, setGeo] = useState({});
   const [ipError, setIpError] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -21,7 +21,6 @@ const Home = ({ data }) => {
       const { ip } = await result.json();
       const geoData = await fetch(`api/geo/${ip}`);
       const data = await geoData.json();
-      console.log(data);
       setGeo(data);
       setLoading(false);
     }
@@ -37,7 +36,7 @@ const Home = ({ data }) => {
     const ip = e.target.ip.value;
     if (
       /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
-        ip,
+        ip
       )
     ) {
       setLoading(true);
@@ -84,33 +83,29 @@ const Home = ({ data }) => {
             <div className='info'>
               <h2 className='title'>IP ADDRESS</h2>
               <p className='data'>
-                {loading ? <Skeleton width={'90%'} /> : geo.ip}
+                {loading ? <Skeleton width='90%' /> : geo.query}
               </p>
             </div>
             <div className='info'>
               <h2 className='title'>LOCATION</h2>
               <p className='data'>
                 {loading ? (
-                  <Skeleton width={'90%'} />
+                  <Skeleton width='90%' />
                 ) : (
-                  `${geo.location.city}, ${geo.location.region}, ${geo.location.postalCode}`
+                  `${geo.city}, ${geo.region}, ${geo.zip}`
                 )}
               </p>
             </div>
             <div className='info visible'>
               <h2 className='title'>TIMEZONE</h2>
               <p className='data'>
-                {loading ? (
-                  <Skeleton width={'90%'} />
-                ) : (
-                  `${geo.location.timezone}`
-                )}
+                {loading ? <Skeleton width='90%' /> : `${geo.timezone}`}
               </p>
             </div>
             <div className='info visible'>
               <h2 className='title'>ISP</h2>
               <p className='data'>
-                {loading ? <Skeleton width={'90%'} /> : geo.isp}
+                {loading ? <Skeleton width='90%' /> : geo.isp}
               </p>
             </div>
           </div>
@@ -119,10 +114,7 @@ const Home = ({ data }) => {
       {loading ? (
         <MapLoading />
       ) : (
-        <DynamicComponentWithNoSSR
-          position={[geo.location.lat, geo.location.lng]}
-          zoom={28}
-        />
+        <DynamicComponentWithNoSSR position={[geo.lat, geo.lon]} zoom={28} />
       )}
     </>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import 'leaflet/dist/leaflet.css';
 import '../styles/globals.css';
 

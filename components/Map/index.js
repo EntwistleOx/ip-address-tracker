@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 
-var myIcon = L.icon({
+const myIcon = L.icon({
   iconUrl: 'images/icon-location.svg',
   iconSize: [46, 56],
 });

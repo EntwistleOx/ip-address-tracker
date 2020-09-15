@@ -62,7 +62,7 @@ h1 {
   width: 90%;
   background: #fff;
   cursor: pointer;
-  margin-bottom: 1.3rem;
+  margin-bottom: 1.6rem;
 }
 
 /* Search field : focus */
@@ -82,7 +82,7 @@ h1 {
   cursor: pointer;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
-  margin-bottom: 1.3rem;
+  margin-bottom: 1.6rem;
 }
 
 /* Submit button : hover */
@@ -143,11 +143,12 @@ h1 {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  top: 38%;
+  top: 115px;
   color: red;
   background-color: #fff;
-  padding: 0.1rem;
+  padding: 0.1rem 0.3rem;
   border-radius: 5px;
+  font-weight: bolder;
 }
 
 /* Desktop */
@@ -171,7 +172,7 @@ h1 {
   }
 
   .error {
-    top: 47%;
+    top: 158px;
   }
 
   .card {
