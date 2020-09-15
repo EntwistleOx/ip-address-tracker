@@ -1,15 +1,16 @@
-# Next.js IP Address Tracker
+# Next.js IP Address Tracker📌
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+🌐 [Live Preview](https://entwistleox-ip-address-tracker.vercel.app/)
 
-## Getting Started
+✨Built in with Next.js, Ipify API and Leaflet. Deployed to Vercel.✨
 
-First, run the development server:
+<div align="center">
+  
+  ![Desktop Preview for the IP Address Tracker](./sources/images/desktop.png)
+</div>
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+<div align="center">
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![Mobile Preview for the IP Address Tracker](./sources/images/mobile.png)
+
+</div>
