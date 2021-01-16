@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
+import { Slide, ToastContainer, toast } from 'react-toastify';
 import Arrow from '../components/Icons/Arrow';
 import MapLoading from '../components/MapLoading';
 
@@ -17,12 +18,18 @@ const Home = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const result = await fetch(`https://ipgeolocation.com/?json=1`);
-      const { ip } = await result.json();
-      const geoData = await fetch(`api/geo/${ip}`);
-      const data = await geoData.json();
-      setGeo(data);
-      setLoading(false);
+      try {
+        const result = await fetch(`https://api.ipify.org/?format=json`);
+        const { ip } = await result.json();
+        const geoData = await fetch(`api/geo/${ip}`);
+        const data = await geoData.json();
+        setGeo(data);
+        setLoading(false);
+      } catch (error) {
+        toast.error(
+          'Failed to Fetch, please check if you are using an add blocker an retry.'
+        );
+      }
     }
     fetchData();
   }, []);
@@ -60,6 +67,7 @@ const Home = () => {
           href='/favicon-32x32.png'
         />
       </Head>
+      <ToastContainer position='top-center' transition={Slide} />
       <header className='pattern'>
         <div className='tracker'>
           <h1>IP Address Tracker</h1>
